@@ -1,0 +1,9 @@
+import os
+
+SECRET_KEY = "supersecretkey"
+
+# Email configuration (example: Gmail)
+EMAIL_ADDRESS = "your_email@gmail.com"
+EMAIL_PASSWORD = "your_app_password"
+SMTP_SERVER = "smtp.gmail.com"
+SMTP_PORT = 587
