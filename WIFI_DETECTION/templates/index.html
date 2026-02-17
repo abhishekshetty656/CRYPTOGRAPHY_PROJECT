@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Fake Wi-Fi Detector</title>
+    <style>
+        body {
+            background: #020617;
+            color: white;
+            font-family: Arial;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #3b82f6;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+        }
+
+        th, td {
+            padding: 10px;
+            border: 1px solid #334155;
+        }
+
+        th {
+            background: #1e293b;
+        }
+
+        .danger {
+            color: red;
+        }
+
+        .warning {
+            color: orange;
+        }
+
+        .safe {
+            color: lightgreen;
+        }
+    </style>
+</head>
+<body>
+
+<h1>📡 Fake Wi-Fi Hotspot Detection System</h1>
+
+<h2>Available Networks</h2>
+
+<table>
+<tr>
+    <th>SSID</th>
+    <th>BSSID</th>
+    <th>Signal</th>
+    <th>Security</th>
+</tr>
+
+{% for net in networks %}
+<tr>
+    <td>{{ net.ssid }}</td>
+    <td>{{ net.bssid }}</td>
+    <td>{{ net.signal }}</td>
+    <td>{{ net.security }}</td>
+</tr>
+{% endfor %}
+
+</table>
+
+<h2>⚠ Suspicious Networks (Potential Evil Twin)</h2>
+
+{% if suspicious %}
+<ul>
+    {% for net in suspicious %}
+        <li class="danger">
+            SSID: {{ net.ssid }} —
+            BSSID: {{ net.bssid }} —
+            Risk: {{ net.risk }}
+        </li>
+    {% endfor %}
+</ul>
+{% else %}
+<p class="safe">No suspicious networks detected</p>
+{% endif %}
+
+</body>
+</html>
