@@ -1,0 +1,20 @@
+{
+  "name": "multivendor-saas",
+  "private": true,
+  "version": "0.1.0",
+  "workspaces": [
+    "backend",
+    "frontend",
+    "admin-dashboard"
+  ],
+  "scripts": {
+    "install:all": "npm -ws install",
+    "dev": "concurrently \"npm:dev:backend\" \"npm:dev:frontend\" \"npm:dev:admin\"",
+    "dev:backend": "npm -w backend run dev",
+    "dev:frontend": "npm -w frontend run dev",
+    "dev:admin": "npm -w admin-dashboard run dev"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

@@ -1,0 +1,200 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String   @id @default(cuid())
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  email         String   @unique
+  passwordHash  String
+  name          String?
+  role          UserRole @default(CUSTOMER)
+  emailVerified DateTime?
+  stores        Store[]
+  customers     Customer[]
+}
+
+enum UserRole {
+  ADMIN
+  MERCHANT
+  CUSTOMER
+}
+
+model Store {
+  id              String      @id @default(cuid())
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  name            String
+  slug            String      @unique
+  subdomain       String      @unique
+  owner           User        @relation(fields: [ownerId], references: [id])
+  ownerId         String
+  description     String?
+  theme           String      @default("minimal")
+  products        Product[]
+  categories      Category[]
+  orders          Order[]
+  subscription    Subscription?
+  isSuspended     Boolean     @default(false)
+  commissionBps   Int         @default(500)
+}
+
+model SubscriptionPlan {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  priceCents  Int
+  interval    String   // month
+  features    String[]
+}
+
+model Subscription {
+  id             String            @id @default(cuid())
+  store          Store             @relation(fields: [storeId], references: [id])
+  storeId        String            @unique
+  plan           SubscriptionPlan  @relation(fields: [planId], references: [id])
+  planId         String
+  status         SubscriptionStatus @default(ACTIVE)
+  currentPeriodEnd DateTime
+  provider       String
+  providerRef    String?
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  PAST_DUE
+  CANCELED
+}
+
+model Category {
+  id        String   @id @default(cuid())
+  name      String
+  slug      String
+  store     Store    @relation(fields: [storeId], references: [id])
+  storeId   String
+  products  Product[]
+  @@unique([slug, storeId])
+}
+
+model Product {
+  id          String    @id @default(cuid())
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  title       String
+  description String
+  priceCents  Int
+  sku         String
+  inventory   Int       @default(0)
+  images      String[]
+  slug        String
+  seoTitle    String?
+  seoDesc     String?
+  category    Category? @relation(fields: [categoryId], references: [id])
+  categoryId  String?
+  store       Store     @relation(fields: [storeId], references: [id])
+  storeId     String
+  @@unique([slug, storeId])
+}
+
+model Customer {
+  id         String   @id @default(cuid())
+  user       User?    @relation(fields: [userId], references: [id])
+  userId     String?
+  email      String
+  name       String?
+  addresses  Address[]
+  orders     Order[]
+  store      Store    @relation(fields: [storeId], references: [id])
+  storeId    String
+}
+
+model Address {
+  id         String   @id @default(cuid())
+  customer   Customer @relation(fields: [customerId], references: [id])
+  customerId String
+  line1      String
+  line2      String?
+  city       String
+  state      String
+  postalCode String
+  country    String
+  isDefault  Boolean  @default(false)
+}
+
+model Cart {
+  id         String   @id @default(cuid())
+  customer   Customer? @relation(fields: [customerId], references: [id])
+  customerId String?
+  store      Store    @relation(fields: [storeId], references: [id])
+  storeId    String
+  items      CartItem[]
+}
+
+model CartItem {
+  id        String  @id @default(cuid())
+  cart      Cart    @relation(fields: [cartId], references: [id])
+  cartId    String
+  product   Product @relation(fields: [productId], references: [id])
+  productId String
+  quantity  Int     @default(1)
+}
+
+model Order {
+  id            String      @id @default(cuid())
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  store         Store       @relation(fields: [storeId], references: [id])
+  storeId       String
+  customer      Customer?   @relation(fields: [customerId], references: [id])
+  customerId    String?
+  items         OrderItem[]
+  subtotalCents Int
+  shippingCents Int
+  totalCents    Int
+  status        OrderStatus @default(PENDING)
+  paymentRef    String?
+  shippingTrack String?
+}
+
+enum OrderStatus {
+  PENDING
+  PAID
+  FULFILLED
+  CANCELED
+  REFUNDED
+}
+
+model OrderItem {
+  id        String  @id @default(cuid())
+  order     Order   @relation(fields: [orderId], references: [id])
+  orderId   String
+  product   Product @relation(fields: [productId], references: [id])
+  productId String
+  title     String
+  priceCents Int
+  quantity  Int
+}
+
+model LedgerEntry {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  store     Store    @relation(fields: [storeId], references: [id])
+  storeId   String
+  order     Order?   @relation(fields: [orderId], references: [id])
+  orderId   String?
+  type      LedgerType
+  amountCents Int
+  note      String?
+}
+
+enum LedgerType {
+  CHARGE
+  COMMISSION
+  PAYOUT
+  REFUND
+}
