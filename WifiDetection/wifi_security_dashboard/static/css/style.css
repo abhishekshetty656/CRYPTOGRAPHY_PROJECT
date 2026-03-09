@@ -1,0 +1,24 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root{
+  --bg:#0b1220;
+  --panel:#0f172a;
+  --accent:#60a5fa;
+}
+
+body{background: radial-gradient(1200px 800px at 20% 0%, rgba(56,189,248,0.06), transparent 60%), radial-gradient(1000px 800px at 100% 0%, rgba(167,139,250,0.06), transparent 60%), var(--bg);}
+
+.glow{
+  box-shadow: 0 0 30px rgba(56,189,248,.15), inset 0 0 10px rgba(56,189,248,.08);
+}
+
+.card{
+  background: linear-gradient(180deg, rgba(30,41,59,.7), rgba(15,23,42,.9));
+  border: 1px solid rgba(148,163,184,.18);
+}
+
+.table{ background: rgba(15,23,42,.6); }
+
+.badge{ @apply px-2 py-1 rounded text-xs; }
