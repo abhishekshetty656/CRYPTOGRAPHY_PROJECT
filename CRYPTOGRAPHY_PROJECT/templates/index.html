@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row g-4">
+  <div class="col-12 col-xl-6">
+    <div class="panel panel-neon h-100">
+      <div class="panel-header"><i class="bi bi-broadcast-pin me-2"></i>WiFi Radar</div>
+      <div class="panel-body d-flex justify-content-center align-items-center">
+        <div id="radar" class="radar">
+          <div class="sweep"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-12 col-xl-6">
+    <div class="row g-4">
+      <div class="col-6">
+        <div class="metric">
+          <div class="metric-label">Networks Detected</div>
+          <div id="metric-total" class="metric-value">0</div>
+        </div>
+      </div>
+      <div class="col-6">
+        <div class="metric">
+          <div class="metric-label">Suspicious</div>
+          <div id="metric-suspicious" class="metric-value">0</div>
+        </div>
+      </div>
+      <div class="col-12">
+        <div class="panel panel-neon">
+          <div class="panel-header"><i class="bi bi-activity me-2"></i>Risk Distribution</div>
+          <div class="panel-body"><canvas id="chart-risk"></canvas></div>
+        </div>
+      </div>
+      <div class="col-12">
+        <div class="panel panel-neon">
+          <div class="panel-header"><i class="bi bi-shield-check me-2"></i>Encryption Types</div>
+          <div class="panel-body"><canvas id="chart-enc"></canvas></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

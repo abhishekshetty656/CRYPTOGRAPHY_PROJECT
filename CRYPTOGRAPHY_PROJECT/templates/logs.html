@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="panel panel-neon">
+  <div class="panel-header d-flex justify-content-between align-items-center">
+    <span><i class="bi bi-journal-text me-2"></i>Attack Logs</span>
+    <button id="btn-clear-logs" class="btn btn-outline-danger btn-sm"><i class="bi bi-trash"></i> Clear Logs</button>
+  </div>
+  <div class="panel-body">
+    <div class="table-responsive">
+      <table class="table table-dark table-striped align-middle" id="table-logs">
+        <thead>
+          <tr>
+            <th>Date (UTC)</th>
+            <th>SSID</th>
+            <th>BSSID</th>
+            <th>Attack Type</th>
+            <th>Risk</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}
